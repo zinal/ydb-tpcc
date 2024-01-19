@@ -117,6 +117,12 @@ public abstract class BenchmarkModule {
     // DATABASE CONNECTION
     // --------------------------------------------------------------------------
 
+    /**
+     * Obtain the database connection from the pool of limited size.
+     * Wait for connection to become available, using the semaphore.
+     * @return Database connection
+     * @throws SQLException
+     */
     public final Connection makeConnection() throws SQLException {
         try {
             connectionSemaphore.acquire();
@@ -130,8 +136,29 @@ public abstract class BenchmarkModule {
         }
     }
 
+    /**
+     * Release the semaphore associated with the connection.
+     */
     public final void returnConnection() {
         connectionSemaphore.release();
+    }
+
+    /**
+     * Obtain the connection to the database without using the connection pool.
+     * This method is used by the loader to avoid the connection pooling and associated issues.
+     *
+     * @return Database connection
+     * @throws SQLException
+     */
+    public final Connection makeRawConnection() throws SQLException {
+        if (StringUtils.isEmpty(workConf.getUsername())) {
+            return DriverManager.getConnection(workConf.getUrl());
+        } else {
+            return DriverManager.getConnection(
+                    workConf.getUrl(),
+                    workConf.getUsername(),
+                    workConf.getPassword());
+        }
     }
 
     // --------------------------------------------------------------------------

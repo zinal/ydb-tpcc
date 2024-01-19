@@ -22,7 +22,6 @@ import com.oltpbenchmark.api.Loader;
 import com.oltpbenchmark.api.LoaderThread;
 import com.oltpbenchmark.benchmarks.tpcc.pojo.*;
 import com.oltpbenchmark.catalog.Table;
-import com.oltpbenchmark.util.ThreadLocalRandomGenerator;
 import com.oltpbenchmark.util.SQLUtil;
 
 import java.sql.*;

@@ -41,7 +41,7 @@ public abstract class LoaderThread implements Runnable {
     @Override
     public final void run() {
         beforeLoad();
-        try (Connection conn = benchmarkModule.makeConnection()) {
+        try (Connection conn = benchmarkModule.makeRawConnection()) {
             load(conn);
         } catch (SQLException ex) {
             SQLException next_ex = ex.getNextException();
@@ -49,7 +49,6 @@ public abstract class LoaderThread implements Runnable {
             LOG.error(msg, next_ex);
             throw new RuntimeException(ex);
         } finally {
-            benchmarkModule.returnConnection();
             afterLoad();
         }
     }
